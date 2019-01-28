@@ -25,6 +25,12 @@ def has_seven(k):
     True
     """
     "*** YOUR CODE HERE ***"
+    if k % 10 == 7:
+        return True
+    if k < 10:
+        return False
+    else:
+        return has_seven(k // 10)
 
 def summation(n, term):
 
@@ -45,6 +51,10 @@ def summation(n, term):
     """
     assert n >= 1
     "*** YOUR CODE HERE ***"
+    if n == 1:
+        return term(1)
+    else:
+        return term(n) + summation(n - 1, term)
 
 def square(x):
     return x * x
@@ -77,6 +87,16 @@ def accumulate(combiner, base, n, term):
     72
     """
     "*** YOUR CODE HERE ***"
+    def apply(x):
+        if not x:
+            return combiner(0, base)
+        elif x == 1:
+            return  combiner(term(1), base)
+        else:
+            return 	combiner(term(x), apply(x - 1))
+    return apply(n)
+    
+    
 
 def summation_using_accumulate(n, term):
     """Returns the sum of term(1) + ... + term(n). The implementation
@@ -92,6 +112,7 @@ def summation_using_accumulate(n, term):
     True
     """
     "*** YOUR CODE HERE ***"
+    return accumulate(add, 0, n, term)
 
 def product_using_accumulate(n, term):
     """An implementation of product using accumulate.
@@ -106,6 +127,7 @@ def product_using_accumulate(n, term):
     True
     """
     "*** YOUR CODE HERE ***"
+    return accumulate(mul, 1, n, term)
 
 def filtered_accumulate(combiner, base, pred, n, term):
     """Return the result of combining the terms in a sequence of N terms
@@ -132,6 +154,10 @@ def filtered_accumulate(combiner, base, pred, n, term):
     """
     def combine_if(x, y):
         "*** YOUR CODE HERE ***"
+        if pred(x):
+            return combiner(x, y)
+        else:
+            return y
     return accumulate(combine_if, base, n, term)
 
 def odd(x):
@@ -156,6 +182,11 @@ def make_repeater(f, n):
     5
     """
     "*** YOUR CODE HERE ***"
+    def apply(x):
+        for i in range(0, n):
+            x = f(x)
+        return x
+    return apply
 
 def compose1(f, g):
     """Return a function h, such that h(x) = f(g(x))."""
@@ -180,10 +211,12 @@ def successor(n):
 def one(f):
     """Church numeral 1: same as successor(zero)"""
     "*** YOUR CODE HERE ***"
+    return lambda x: f(x)
 
 def two(f):
     """Church numeral 2: same as successor(successor(zero))"""
     "*** YOUR CODE HERE ***"
+    return lambda x: f(f(x))
 
 three = successor(two)
 
@@ -200,6 +233,7 @@ def church_to_int(n):
     3
     """
     "*** YOUR CODE HERE ***"
+    return n(lambda x : x + 1)(0)
 
 def add_church(m, n):
     """Return the Church numeral for m + n, for Church numerals m and n.
@@ -208,6 +242,7 @@ def add_church(m, n):
     5
     """
     "*** YOUR CODE HERE ***"
+    return lambda f: lambda x: m(f)(n(f)(x))
 
 def mul_church(m, n):
     """Return the Church numeral for m * n, for Church numerals m and n.
@@ -219,6 +254,7 @@ def mul_church(m, n):
     12
     """
     "*** YOUR CODE HERE ***"
+    return lambda f: lambda x: m(n(f))(x)
 
 def pow_church(m, n):
     """Return the Church numeral m ** n, for Church numerals m and n.
@@ -229,3 +265,4 @@ def pow_church(m, n):
     9
     """
     "*** YOUR CODE HERE ***"
+    return lambda x: n(m)(x)
