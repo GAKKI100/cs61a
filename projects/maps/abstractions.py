@@ -94,7 +94,7 @@ def restaurant_price(restaurant):
     # BEGIN Question 2
     "*** YOUR CODE HERE ***"
     return restaurant[3]
-    # END Question 20
+    # END Question 2
 
 def restaurant_ratings(restaurant):
     """Return a list of ratings, which are numbers from 1 to 5, of the
